@@ -416,118 +416,79 @@
         });
     });
 
-
-
-
+    
     $(document).ready(function () {
-        $('#hashira').click(function () {
-            $('#text1').focus(); // テキストエリアにフォーカスを移動
-            let textArea = $('#text1')[0]; // テキストエリア要素を取得
-            let startPos = textArea.selectionStart; // カーソルの開始位置を取得
-            let endPos = textArea.selectionEnd; // カーソルの終了位置を取得
-            let text = $('#text1').val();
+        // サイドバー内のビュー要素がクリックされた時の処理
+        $('#side').on('click', '.view', function () {
+            // クリックされたビューのIDを取得
+            var viewId = $(this).attr('id');
 
-            // "〇"を挿入
-            let newText = text.substring(0, startPos) + "〇場所（時間）" + text.substring(endPos, text.length);
-            $('#text1').val(newText);
+            // テキストエリアのIDはビューのIDから'view'を削除して'text'に変更する
+            var textareaId = viewId.replace('view', 'text');
+
+            // 対応するテキストエリアを取得し、そのテキストエリアにフォーカスを移動
+            $('#' + textareaId).focus();
         });
-    });
 
-    $(document).ready(function () {
-        $('#togaki').click(function () {
-            $('#text1').focus(); // テキストエリアにフォーカスを移動
-            let textArea = $('#text1')[0]; // テキストエリア要素を取得
-            let startPos = textArea.selectionStart; // カーソルの開始位置を取得
-            let endPos = textArea.selectionEnd; // カーソルの終了位置を取得
-            let text = $('#text1').val();
+        // サイドバー内のカーソル要素がクリックされた時の処理
+        $('#side').on('click', '.cursor', function () {
+            // クリックされたカーソル要素の親要素のスクロール位置を取得
+            var scrollTop = $('#side').scrollTop(); // 修正箇所
 
-            // "〇"を挿入
-            let newText = text.substring(0, startPos) + "　　　" + text.substring(endPos, text.length);
-            $('#text1').val(newText);
-        });
-    });
+            // カーソルの方向に応じてスクロールする量を決定
+            var scrollAmount = ($(this).hasClass('up') ? -50 : 50);
 
-    $(document).ready(function () {
-        $('#serihu').click(function () {
-            $('#text1').focus(); // テキストエリアにフォーカスを移動
-            let textArea = $('#text1')[0]; // テキストエリア要素を取得
-            let startPos = textArea.selectionStart; // カーソルの開始位置を取得
-            let endPos = textArea.selectionEnd; // カーソルの終了位置を取得
-            let text = $('#text1').val();
-
-            // "〇"を挿入
-            let newText = text.substring(0, startPos) + "名前「」" + text.substring(endPos, text.length);
-            $('#text1').val(newText);
-        });
-    });
-
-    $(document).ready(function () {
-        $('#flash').click(function () {
-            $('#text1').focus(); // テキストエリアにフォーカスを移動
-            let textArea = $('#text1')[0]; // テキストエリア要素を取得
-            let startPos = textArea.selectionStart; // カーソルの開始位置を取得
-            let endPos = textArea.selectionEnd; // カーソルの終了位置を取得
-            let text = $('#text1').val();
-
-            // "〇"を挿入
-            let newText = text.substring(0, startPos) + "　　　×　　×　　×（フラッシュ）\n" + text.substring(endPos, text.length);
-            $('#text1').val(newText);
-        });
-    });
-
-    $(document).ready(function () {
-        $('#keika').click(function () {
-            $('#text1').focus(); // テキストエリアにフォーカスを移動
-            let textArea = $('#text1')[0]; // テキストエリア要素を取得
-            let startPos = textArea.selectionStart; // カーソルの開始位置を取得
-            let endPos = textArea.selectionEnd; // カーソルの終了位置を取得
-            let text = $('#text1').val();
-
-            // "〇"を挿入
-            let newText = text.substring(0, startPos) + "　　　×　　×　　×\n" + text.substring(endPos, text.length);
-            $('#text1').val(newText);
-        });
-    });
-
-    $(document).ready(function () {
-        $('#kaiso').click(function () {
-            $('#text1').focus(); // テキストエリアにフォーカスを移動
-            let textArea = $('#text1')[0]; // テキストエリア要素を取得
-            let startPos = textArea.selectionStart; // カーソルの開始位置を取得
-            let endPos = textArea.selectionEnd; // カーソルの終了位置を取得
-            let text = $('#text1').val();
-
-            // "〇"を挿入
-            let newText = text.substring(0, startPos) + "〇回想・場所（時期・時間）\n\n　　　回想終わり。" + text.substring(endPos, text.length);
-            $('#text1').val(newText);
-        });
-    });
-
-    $(document).ready(function () {
-        $('#NA').click(function () {
-            $('#text1').focus(); // テキストエリアにフォーカスを移動
-            let textArea = $('#text1')[0]; // テキストエリア要素を取得
-            let startPos = textArea.selectionStart; // カーソルの開始位置を取得
-            let endPos = textArea.selectionEnd; // カーソルの終了位置を取得
-            let text = $('#text1').val();
-
-            // "〇"を挿入
-            let newText = text.substring(0, startPos) + "〇名前NA『』" + text.substring(endPos, text.length);
-            $('#text1').val(newText);
+            // スクロール位置を調整して更新
+            $('#side').scrollTop(scrollTop + scrollAmount);
         });
     });
 
 
-    //プルダウンでフォントを変更
+
+
+
+
+
     $(document).ready(function () {
-        // プルダウンの値が変更された時の処理
-        $("#fontSelect").change(function () {
-            // 選択されたフォントを取得
-            var selectedFont = $(this).val();
-            // 選択されたフォントを適用
-            $("#text").css("font-family", selectedFont);
+        // 各ボタンのクリックイベントをまとめる
+        $('#hashira, #togaki, #serihu, #flash, #keika, #kaiso, #NA').click(function () {
+            // フォーカスしているテキストエリアを取得
+            let $textArea = $('textarea.focused');
+
+            // テキストエリアが存在し、フォーカスしている場合にのみ挿入処理を実行
+            if ($textArea.length > 0) {
+                let startPos = $textArea[0].selectionStart; // カーソルの開始位置を取得
+                let endPos = $textArea[0].selectionEnd; // カーソルの終了位置を取得
+                let text = $textArea.val();
+                let newText = "";
+
+                // 各ボタンによって挿入する文字列を変更
+                if ($(this).attr('id') === 'hashira') {
+                    newText = text.substring(0, startPos) + "〇場所（時間）" + text.substring(endPos, text.length);
+                } else if ($(this).attr('id') === 'togaki') {
+                    newText = text.substring(0, startPos) + "　　　" + text.substring(endPos, text.length);
+                } else if ($(this).attr('id') === 'serihu') {
+                    newText = text.substring(0, startPos) + "名前「」" + text.substring(endPos, text.length);
+                } else if ($(this).attr('id') === 'flash') {
+                    newText = text.substring(0, startPos) + "　　　×　　×　　×（フラッシュ）\n" + text.substring(endPos, text.length);
+                } else if ($(this).attr('id') === 'keika') {
+                    newText = text.substring(0, startPos) + "　　　×　　×　　×\n" + text.substring(endPos, text.length);
+                } else if ($(this).attr('id') === 'kaiso') {
+                    newText = text.substring(0, startPos) + "〇回想・場所（時期・時間）\n\n　　　回想終わり。" + text.substring(endPos, text.length);
+                } else if ($(this).attr('id') === 'NA') {
+                    newText = text.substring(0, startPos) + "〇名前NA『』" + text.substring(endPos, text.length);
+                }
+
+
+                // 文字列を挿入
+                $textArea.val(newText);
+
+                // テキストエリアにフォーカスを戻す
+                $textArea[0].focus();
+            }
         });
     });
+
 
 
 </script>

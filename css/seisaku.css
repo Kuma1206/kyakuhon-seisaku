@@ -13,6 +13,7 @@
     background-color: #dee4e3;
 }
 
+
 #t-room {
     width: 705%;
     margin-top: 23px;
@@ -139,6 +140,7 @@
     justify-content: center;
     align-items: start;
     flex-direction: column;
+    margin-left: 20px;
 }
 
 #side {
@@ -158,8 +160,8 @@
     border-right-color: rgb(192, 203, 207);
     border-width: 1px;
     position: fixed;
-    /* flex-direction: column; */
-    /* position: fixed; */
+    overflow-y: auto;
+    /* 縦スクロールを有効にする */
 }
 
 .view {
