@@ -184,6 +184,7 @@
         // 初期値の設定
         let selectedGyo = parseInt($("#gyo").val());
         let selectedMoji = parseInt($("#moji").val());
+        let bBoxCounter = 2; // 最初のtextareaの数を設定
 
         // ページが読み込まれたときに実行する処理
         function applySelectedValuesFromLocalStorage() {
@@ -217,32 +218,27 @@
         });
 
 
-        let bBoxCounter = 1; // 最初のtextareaの数を設定
-        $("#text1").on("input", function () {
-            let text = $(this).val();
-            // 改行文字を削除してから文字数をカウント
-            let charCount = text.replace(/\n/g, '').length;
-            let lines = text.split("\n");
-            let lineCount = lines.length; // 行数を計算
-            $("#charCount").text("文字数: " + charCount); // 文字数を表示
-            $("#lineCount").text("行数: " + lineCount); // 行数を表示
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].length > selectedMoji) {
-                    // 選択された文字数を超える場合は、その位置に改行を挿入
-                    lines[i] = lines[i].substring(0, selectedMoji) + "\n" + lines[i].substring(selectedMoji);
+ // ローカルストレージの値を適用する関数
+        function applyLocalStorageValues() {
+            const storedTextAreas = localStorage.getItem("textAreas");
+            if (storedTextAreas) {
+                try {
+                    const textAreas = JSON.parse(storedTextAreas);
+                    textAreas.forEach(textArea => {
+                        // 既存のテキストエリアが存在する場合は更新、存在しない場合は新しいテキストエリアを作成
+                        const $existingTextarea = $("#" + textArea.id);
+                        if ($existingTextarea.length > 0) {
+                            $existingTextarea.val(textArea.value);
+                            updateView($existingTextarea); // 対応する view を更新
+                        } else {
+                            createNewTextarea(textArea.value, textArea.id); // 新しいテキストエリアを作成
+                        }
+                    });
+                } catch (e) {
+                    console.error("Failed to parse stored text areas:", e);
                 }
             }
-            // 行数が最大の行数を超える場合、超えた部分を削除する
-            if (lineCount > selectedGyo) {
-                lines = lines.slice(0, selectedGyo); // 最大の行数までの行だけを残す
-            }
-
-            $(this).val(lines.join("\n")); // 文字数制限を適用したテキストを再度設定
-
-            // 行数が制限を超えた場合、新しいtextareaを作成する
-            if (lineCount > selectedGyo) {
-                createNewTextarea('');
-            }
+        }
 
         
         function createNewTextarea(text) {
@@ -328,24 +324,98 @@
                             // 対応するviewも非表示にする
                             $newView.hide();
 
+                            $newBBoxID.hide();  
+
                             // b-boxIDの数値を減算する
                             bBoxCounter--;
 
-                            // b-boxIDのテキストを更新
-                            $newBBoxID.text(bBoxCounter);
-                            $newBBoxID.hide();
+                            // 新しいtextareaとviewを削除する
+                            $(this).remove();
+                            $newView.remove();
+
+                            // テキストエリアの数が1つ以下になった場合、text1にフォーカスを戻す
+                            if ($("#t-box .t-area").length <= 1) {
+                                $("#text1").addClass("focused");
+                            }
                         }
                     }
                 });
 
                 // b-boxIDの数値をインクリメント
                 bBoxCounter++;
-
-                // b-boxIDのテキストを更新
-                $newBBoxID.text(bBoxCounter);
             }
+
+            // 対応するviewを更新する関数
+            function updateView($textarea) {
+                let text = $textarea.val();
+                let lines = text.split("\n");
+                let viewText = lines.slice(0, selectedGyo).join("\n");
+                let $view = $("#view" + $textarea.attr("id").substr(4));
+                $view.text(viewText);
+            }
+
+            // ローカルストレージに更新内容を保存する関数
+            function updateLocalStorage($textarea) {
+                let textAreaId = $textarea.attr("id");
+                let text = $textarea.val();
+                let storedTextAreas = JSON.parse(localStorage.getItem("textAreas")) || [];
+                let index = storedTextAreas.findIndex(ta => ta.id === textAreaId);
+
+                if (index > -1) {
+                    storedTextAreas[index].value = text;
+                } else {
+                    storedTextAreas.push({ id: textAreaId, value: text });
+                }
+
+                localStorage.setItem("textAreas", JSON.stringify(storedTextAreas));
+            }
+
+            // 保存ボタンがクリックされた時の処理
+            $("#save").on("click", function () {
+                let textAreas = [];
+                $(".t-area").each(function () {
+                    let textAreaObj = {
+                        id: $(this).attr("id"),
+                        value: $(this).val()
+                    };
+                    textAreas.push(textAreaObj);
+                });
+
+                localStorage.setItem("textAreas", JSON.stringify(textAreas));
+                alert("保存しました");
+            });
+
+        // 初回実行
+        applyLocalStorageValues();
+
+        // 最初のテキストエリアに対するイベントハンドラを追加
+        $("#text1").on("input", function () {
+            let text = $(this).val();
+            let charCount = text.replace(/\n/g, '').length;
+            let lines = text.split("\n");
+            let lineCount = lines.length;
+            $("#charCount").text("文字数: " + charCount);
+            $("#lineCount").text("行数: " + lineCount);
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].length > selectedMoji) {
+                    lines[i] = lines[i].substring(0, selectedMoji) + "\n" + lines[i].substring(selectedMoji);
+                }
+            }
+            if (lineCount > selectedGyo) {
+                lines = lines.slice(0, selectedGyo);
+            }
+
+            $(this).val(lines.join("\n"));
+
+            if (lineCount > selectedGyo) {
+                createNewTextarea('');
+            }
+
+            updateView($(this));
+            updateLocalStorage($(this));
         });
     });
+
 
 
 
@@ -459,19 +529,7 @@
         });
     });
 
-    //ローカルストレージに保存
-    $("#save").on("click", function () {
-        const v = $("#text1").val();
-        localStorage.setItem("text1", v);
-        alert("保存しました");
-    })
 
-    //保存したtextを抽出
-    if (localStorage.getItem("text1")) {
-        const v = localStorage.getItem("text1");
-        $("#text1").val(v);
-
-    }
 </script>
 
 
