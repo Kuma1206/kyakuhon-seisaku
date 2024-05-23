@@ -5,6 +5,8 @@
 
 #main {
     width: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
     margin-top: 0px;
     margin-left: 0px;
     margin-right: 0px;
@@ -15,7 +17,7 @@
 
 
 #t-room {
-    width: 705%;
+    width: 100px;
     margin-top: 23px;
     display: flex;
     justify-content: center;
@@ -30,6 +32,7 @@
     display: flex;
     justify-content: start;
     align-items: center;
+    z-index: 999;
 }
 
 #n-room {
@@ -106,7 +109,7 @@
     position: fixed;
     top: 0;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-
+    z-index: 999;
 }
 
 #t-heder {
@@ -121,6 +124,18 @@
     align-items: center;
     flex-direction: row-reverse;
 }
+
+
+  .menu {
+      display: none;
+      top: 27px;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      position:fixed;
+      width: 10%;
+      z-index: 99999;
+  }
 
 #kfk {
     margin-left: 5px;
@@ -140,33 +155,31 @@
     justify-content: center;
     align-items: start;
     flex-direction: column;
-    margin-left: 20px;
+    margin-left: 0px;
+    position:relative;
+    z-index: 0;
 }
 
 #side {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     width: 17%;
     height: 100%;
-    margin-top: 70px;
+    margin-top: 20px;
     padding: 0%;
-    left: 10px;
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: start;
-    border-right-style: solid;
-    border-right-color: rgb(192, 203, 207);
+    border-left-style: solid;
+    border-left-color: rgb(192, 203, 207);
     border-width: 1px;
     position: fixed;
     overflow-y: auto;
+    z-index:-1;
     /* 縦スクロールを有効にする */
 }
 
 .view {
     display: block;
-    font-size: 3px;
+    font-size: 3.5px;
     width: 100px;
     height: 50px;
     padding: 20px;
@@ -177,24 +190,30 @@
     border-radius: 3px;
     background-color: #fff;
     writing-mode: vertical-rl;
+    z-index: 0;
 }
 
 #side1 {
     width: 0%;
     margin-top: 23px;
     display: flex;
-    justify-content: end;
+    justify-content: start;
     /* position: fixed; */
     z-index: 999;
 }
 
 #side2 {
-    width: 30px;
+    width: 40px;
+    height: 100%;
+    margin-top: 20px;
+    padding-top: 10px;
     display: flex;
     justify-content: center;
     /* position: fixed; */
-    z-index: 999;
     background-color: rgb(192, 203, 207);
+    z-index: 998;
+    position: fixed;
+    left: 0;
 }
 
 #f-family {
@@ -213,6 +232,7 @@
     align-items: center;
     justify-self: unset;
     flex-direction: column;
+    padding-top: 20px;
 }
 
 /* フォーカスされた時の境界線の色を変更 */
@@ -300,13 +320,14 @@ body {
 }
 
 .header-area {
-    width: 10px;
+    width: 30px;
     height: 10px;
     display: flex;
     justify-content: center;
     padding: 10px;
     align-items: center;
     background-color: rgb(192, 203, 207);
+    z-index: 999;
 }
 
 .hamburger {
@@ -323,6 +344,7 @@ body {
     height: 2.0px;
     background-color: #000;
     transition: .5s;
+    z-index: 1000;
 }
 
 .hamburger span:first-of-type {
@@ -342,23 +364,26 @@ body {
 
 .slide-menu {
     color: #000;
-    padding-top: 20px;
+    padding-top: 15px;
+    margin-top: -10px;
     background-color: rgb(192, 203, 207);
     position: fixed;
-    top: 25px;
     height: 100%;
-    width: 100%;
-    right: 20%;
-    left: 85%;
-    transform: translateX(20%);
-    transition: .0s;
-    z-index: -1;
-    position: fixed;
+    width: 15%;
+    left: -200px;
+    transition: left 0s ease-in-out;
+    z-index: 0;
+}
+
+.slide-menu.active {
+    left: 0;
+    /* 右にスライドする距離を設定 */
 }
 
 .slide-menu p {
+    font-size: small;
     padding-top: 5px;
-    padding-left: 40px;
+    padding-left: 50px;
     color: #000;
     z-index: 100;
 }
